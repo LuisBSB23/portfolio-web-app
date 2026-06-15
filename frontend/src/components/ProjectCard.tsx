@@ -28,28 +28,33 @@ export default function ProjectCard({
   });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // 1. BLOQUEIO PARA MOBILE: Não executa o efeito em ecrãs pequenos
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
+    
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left; // x position within the element
-    const y = e.clientY - rect.top;  // y position within the element
+    const x = e.clientX - rect.left; 
+    const y = e.clientY - rect.top;  
     
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    // Calcula a rotação (máximo de 8 graus de inclinação)
     const rotateX = ((y - centerY) / centerY) * -8;
     const rotateY = ((x - centerX) / centerX) * 8;
 
     setTiltStyle({
       transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`,
-      transition: "none" // Remove a transição enquanto o rato se move para não haver delay
+      transition: "none" 
     });
   };
 
   const handleMouseLeave = () => {
+    // Apenas repõe o estado se não for mobile
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
+    
     setTiltStyle({
       transform: "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
-      transition: "transform 0.5s ease-out" // Suaviza o regresso à posição original
+      transition: "transform 0.5s ease-out" 
     });
   };
 
@@ -63,12 +68,21 @@ export default function ProjectCard({
         style={{ 
           backgroundColor: "var(--color-surface-container)", 
           borderColor: "rgba(255,255,255,0.05)",
-          ...tiltStyle // Aplica a inclinação dinâmica
+          ...tiltStyle 
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(229,62,62,0.5)")}
+        onMouseEnter={(e) => {
+           if (typeof window !== "undefined" && window.innerWidth >= 768) {
+               e.currentTarget.style.borderColor = "rgba(229,62,62,0.5)";
+           }
+        }}
+        onMouseOut={(e) => {
+           if (typeof window !== "undefined" && window.innerWidth >= 768) {
+               e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)";
+           }
+        }}
       >
         <div className="aspect-video md:aspect-auto w-full h-full relative">
-          <img src={imagem} alt={titulo} className="object-cover w-full h-full transition-all duration-700 grayscale group-hover:grayscale-0" />
+          <img src={imagem} alt={titulo} className="object-cover w-full h-full transition-all duration-700 grayscale md:group-hover:grayscale-0" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--color-surface-container) 0%, rgba(22,32,48,0.2) 50%, transparent 100%)", opacity: 0.9 }} />
         </div>
         <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full z-10">
@@ -101,10 +115,10 @@ export default function ProjectCard({
       }}
     >
       <div className="aspect-[16/9] rounded-lg overflow-hidden relative border pointer-events-none" style={{ backgroundColor: "var(--color-background)", borderColor: "rgba(255,255,255,0.05)" }}>
-        <img src={imagem} alt={`${titulo} Mockup`} className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity" />
+        <img src={imagem} alt={`${titulo} Mockup`} className="w-full h-full object-cover opacity-40 md:group-hover:opacity-60 transition-opacity" />
         {icone && (
           <div className="absolute inset-0 flex items-center justify-center" style={{ color: "var(--color-on-surface-variant)" }}>
-            <span className="material-symbols-outlined text-[48px] md:text-[64px] group-hover:scale-110 transition-transform duration-500">{icone}</span>
+            <span className="material-symbols-outlined text-[48px] md:text-[64px] md:group-hover:scale-110 transition-transform duration-500">{icone}</span>
           </div>
         )}
       </div>
