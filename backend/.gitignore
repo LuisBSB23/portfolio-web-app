@@ -1,0 +1,29 @@
+# Ambiente Virtual
+venv/
+env/
+.venv/
+
+# Variáveis de Ambiente (NUNCA suba senhas ou chaves)
+
+
+# Banco de Dados Local do SQLite (gerado pelo FastAPI/SQLAlchemy)
+*.db
+*.sqlite3
+portfolio.db
+
+# Caches do Python (gerados ao rodar o uvicorn)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ferramentas de Teste e Cobertura (para quando rodar o pytest)
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Pastas de IDEs (opcional, mas recomendado)
+.vscode/
+.idea/
