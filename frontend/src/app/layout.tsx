@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Cabecalho from "@/components/layout/Cabecalho";
 import Rodape from "@/components/layout/Rodape";
+import CanvasCursor from "@/components/CanvasCursor"; // 1. Importar o componente
 
 export const metadata: Metadata = {
   title: "Luis Otávio | Portfolio",
@@ -10,7 +11,6 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // 3. PROTEÇÃO ANTI-SCROLL HORIZONTAL NA TAG HTML E BODY
     <html lang="pt-BR" className="overflow-x-hidden">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,10 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="overflow-x-hidden antialiased relative" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-on-surface)' }}>
         <div id="particles-js" className="fixed inset-0 z-0 pointer-events-none" />
         
-        {/* Adicionado pointer-events-none por segurança extra no mobile */}
         <div className="fixed inset-0 grain-texture z-0 pointer-events-none" />
         <div className="fixed inset-0 hero-glow z-0 pointer-events-none" />
         
+        {/* 2. Adicionar o CanvasCursor aqui! */}
+        <CanvasCursor />
+
         <Cabecalho />
         {children}
         <Rodape />
