@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import InputContato from "../InputContato";
+import { useAnimacaoScroll } from "@/hooks/useAnimacaoScroll"; // 1. Adicionado o import
 
 export default function SecaoContato() {
     const [form, setForm] = useState({ nome: "", email: "", mensagem: "" });
     const [enviado, setEnviado] = useState(false);
     const [enviando, setEnviando] = useState(false);
+    
+    // 2. Inicializado o hook
+    const ref = useAnimacaoScroll<HTMLElement>();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -23,7 +27,8 @@ export default function SecaoContato() {
     }
 
     return (
-        <section id="contato" className="relative py-16 md:py-24 z-10">
+        // 3. Adicionada a referência (ref={ref}) à secção
+        <section ref={ref} id="contato" className="relative py-16 md:py-24 z-10">
             <div className="max-w-[1200px] mx-auto px-4 sm:px-5">
                 {/* Título */}
                 <div className="mb-8 md:mb-16">

@@ -1,37 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import ParticlesBackground from "../ParticlesBackground";
+import { useAnimacaoScroll } from "@/hooks/useAnimacaoScroll"; // 1. Importar o hook
 
 export default function SecaoHero() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Animação de entrada da Hero
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    // Pequeno delay para garantir que a animação seja visível
-    const timer = setTimeout(() => {
-      section.style.opacity = "1";
-      section.style.transform = "translateY(0)";
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
+  // 2. Usar o hook em vez do useEffect/useRef manuais
+  const ref = useAnimacaoScroll<HTMLElement>();
 
   return (
     <>
       <ParticlesBackground />
 
       <section
-        ref={sectionRef}
+        ref={ref} // 3. Aplicar a referência aqui
         className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16 px-4 sm:px-5 overflow-hidden"
-        style={{
-          opacity: 0,
-          transform: "translateY(20px)",
-          transition: "opacity 1s ease, transform 1s ease",
-        }}
+        // 4. Remover a tag `style` antiga que continha opacity e transform manuais, pois o hook já faz isso
       >
         {/* Ícones flutuantes decorativos */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
