@@ -4,6 +4,7 @@ import SecaoSobreMim from "@/components/sections/SecaoSobreMim";
 import SecaoHabilidades from "@/components/sections/SecaoHabilidades";
 import SecaoAreasEspecialidade from "@/components/sections/SecaoAreasEspecialidade";
 import SecaoOutrosProjetos from "@/components/sections/SecaoOutrosProjetos";
+import SecaoContato from "@/components/sections/SecaoContato";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <SecaoHabilidades />
       <SecaoAreasEspecialidade />
       <SecaoOutrosProjetos />
+      <SecaoContato />
     </main>
   );
 }
