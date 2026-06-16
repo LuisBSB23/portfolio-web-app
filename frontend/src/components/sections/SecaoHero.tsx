@@ -5,12 +5,11 @@ import ParticlesBackground from "../ParticlesBackground";
 import { useAnimacaoScroll } from "@/hooks/useAnimacaoScroll";
 
 // --- Sub-componente: Botão Magnético ---
-function MagneticButton({ children, href, className, style }: any) {
+function MagneticButton({ children, href, className, style, download }: any) {
   const btnRef = useRef<HTMLAnchorElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // 1. BLOQUEIO PARA MOBILE
     if (typeof window !== "undefined" && window.innerWidth < 768) return;
 
     if (!btnRef.current) return;
@@ -31,6 +30,7 @@ function MagneticButton({ children, href, className, style }: any) {
   return (
     <a
       href={href}
+      download={download}
       ref={btnRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -83,22 +83,15 @@ export default function SecaoHero() {
         className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16 px-4 sm:px-5 overflow-hidden"
       >
         <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
-          {/* 2. LIMPEZA MOBILE: Ícone 1 (Fica mais pequeno no mobile) */}
           <div className="floating-icon absolute top-1/4 left-[5%] md:left-[10%] text-[32px] md:text-[64px]" style={{ color: "var(--color-on-surface)" }}>
             <span className="material-symbols-outlined">code</span>
           </div>
-          
-          {/* Ícone 2 (Fica mais pequeno no mobile) */}
           <div className="floating-icon absolute top-1/3 right-[5%] md:right-[15%] text-[40px] md:text-[80px]" style={{ color: "var(--color-on-surface)", animationDelay: "-2s" }}>
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>psychology</span>
           </div>
-          
-          {/* Ícone 3 (hidden md:block -> Escondido no mobile) */}
           <div className="hidden md:block floating-icon absolute bottom-1/4 left-[20%] text-[56px]" style={{ color: "var(--color-on-surface)", animationDelay: "-4s" }}>
             <span className="material-symbols-outlined">terminal</span>
           </div>
-          
-          {/* Ícone 4 (hidden md:block -> Escondido no mobile) */}
           <div className="hidden md:block floating-icon absolute bottom-1/3 right-[10%] text-[72px]" style={{ color: "var(--color-on-surface)", animationDelay: "-1s" }}>
             <span className="material-symbols-outlined">database</span>
           </div>
@@ -129,8 +122,10 @@ export default function SecaoHero() {
               <span className="material-symbols-outlined pointer-events-none">arrow_forward</span>
             </MagneticButton>
 
+            {/* AQUI ESTÁ A IMPLEMENTAÇÃO DO DOWNLOAD (href e download) */}
             <MagneticButton
-              href="#"
+              href="/curriculo.pdf"
+              download="Luis_Otavio_Curriculo.pdf"
               className="w-full sm:w-auto min-h-[48px] border border-[#F3F4F6] text-[#F3F4F6] hover:bg-[#F3F4F6] hover:text-[#121212] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold transition-all duration-300 flex items-center justify-center gap-2"
               style={{ fontFamily: "Inter, sans-serif" }}
             >

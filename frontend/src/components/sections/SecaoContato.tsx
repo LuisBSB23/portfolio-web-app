@@ -2,32 +2,61 @@
 
 import { useState } from "react";
 import InputContato from "../InputContato";
-import { useAnimacaoScroll } from "@/hooks/useAnimacaoScroll"; // 1. Adicionado o import
+import { useAnimacaoScroll } from "@/hooks/useAnimacaoScroll";
 
 export default function SecaoContato() {
     const [form, setForm] = useState({ nome: "", email: "", mensagem: "" });
+    const [erro, setErro] = useState("");
     const [enviado, setEnviado] = useState(false);
     const [enviando, setEnviando] = useState(false);
     
-    // 2. Inicializado o hook
     const ref = useAnimacaoScroll<HTMLElement>();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        setErro(""); // Limpa o erro ao digitar
     }
 
     async function handleSubmit(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault();
-        if (!form.nome || !form.email || !form.mensagem) return;
+        
+        // Validação Frontend
+        if (!form.nome || !form.email || !form.mensagem) {
+            setErro("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(form.email)) {
+            setErro("Por favor, insira um e-mail válido.");
+            return;
+        }
+
         setEnviando(true);
-        await new Promise((r) => setTimeout(r, 1200));
-        setEnviando(false);
-        setEnviado(true);
-        setForm({ nome: "", email: "", mensagem: "" });
+        setErro("");
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+            const res = await fetch(`${apiUrl}/api/contato`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form)
+            });
+
+            if (!res.ok) {
+                throw new Error("Erro ao enviar a mensagem. Tente novamente.");
+            }
+
+            setEnviado(true);
+            setForm({ nome: "", email: "", mensagem: "" });
+        } catch (err: any) {
+            setErro(err.message || "Falha na comunicação com o servidor.");
+        } finally {
+            setEnviando(false);
+        }
     }
 
     return (
-        // 3. Adicionada a referência (ref={ref}) à secção
         <section ref={ref} id="contato" className="relative py-16 md:py-24 z-10">
             <div className="max-w-[1200px] mx-auto px-4 sm:px-5">
                 {/* Título */}
@@ -39,7 +68,7 @@ export default function SecaoContato() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-                    {/* Informações */}
+                    {/* Informações (Mantidas iguais ao original) */}
                     <div className="flex flex-col gap-6">
                         <p style={{ fontFamily: "Inter, sans-serif", fontSize: "clamp(16px, 2vw, 18px)", lineHeight: 1.6, color: "var(--color-on-secondary-container)" }}>
                             Estou sempre aberto a novos desafios e colaborações em projetos inovadores. Entre em contato e vamos construir algo juntos!
@@ -76,7 +105,7 @@ export default function SecaoContato() {
                         </div>
                     </div>
 
-                    {/* Formulário */}
+                    {/* Formulário Atualizado */}
                     <div className="rounded-xl p-6 md:p-8 border flex flex-col gap-5" style={{ backgroundColor: "var(--color-surface-container)", borderColor: "rgba(255,255,255,0.05)" }}>
                         {enviado ? (
                             <div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
@@ -89,6 +118,11 @@ export default function SecaoContato() {
                             </div>
                         ) : (
                             <>
+                                {erro && (
+                                    <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg text-sm" style={{ fontFamily: "Inter, sans-serif" }}>
+                                        {erro}
+                                    </div>
+                                )}
                                 <InputContato id="nome" name="nome" label="Nome" value={form.nome} placeholder="Seu nome" onChange={handleChange} />
                                 <InputContato id="email" name="email" label="Email" type="email" value={form.email} placeholder="seu@email.com" onChange={handleChange} />
                                 <InputContato id="mensagem" name="mensagem" label="Mensagem" value={form.mensagem} placeholder="Conte-me sobre seu projeto..." onChange={handleChange} textarea rows={5} />

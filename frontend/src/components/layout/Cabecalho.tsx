@@ -65,8 +65,10 @@ export default function Cabecalho() {
               </a>
             </div>
 
-            <button
-              className="px-6 py-2 min-h-[48px] rounded-lg font-bold text-[14px] transition-all active:opacity-80 hover:opacity-90 primary-button-glow hover:-translate-y-0.5"
+            <a
+              href="/curriculo.pdf"
+              download="Luis_Otavio_Curriculo.pdf"
+              className="inline-flex items-center justify-center px-6 py-2 min-h-[48px] rounded-lg font-bold text-[14px] transition-all active:opacity-80 hover:opacity-90 primary-button-glow hover:-translate-y-0.5"
               style={{
                 backgroundColor: 'var(--color-primary)',
                 color: 'var(--color-on-primary)',
@@ -75,7 +77,7 @@ export default function Cabecalho() {
               }}
             >
               Baixar Currículo
-            </button>
+            </a>
           </div>
 
           {/* Botão menu mobile */}
