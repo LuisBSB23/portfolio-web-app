@@ -8,6 +8,7 @@ class ProjetoBase(BaseModel):
     imagem_url: Optional[str] = None
     link_github: Optional[str] = None
     link_deploy: Optional[str] = None
+    destaque: bool = False # Novo campo adicionado com valor por defeito
 
 class ProjetoCreate(ProjetoBase):
     pass

@@ -11,20 +11,15 @@ interface Projeto {
   tecnologias: string[];
   descricao?: string;
   icone?: string;
+  destaque?: boolean;
 }
-
-const fallbackOutrosProjetos: Projeto[] = [
-  { titulo: "MedControl", imagem: "https://lh3.googleusercontent.com/aida-public/AB6AXuAC-kIpptCc8tafp6bHU5NE0ku09wjsjhwHjhbS9XpyqM5wPiRuNJJAQqD4egCuui25n1lK3tUt7crRmaqpIU7Gv5eYc6PqIXT-QPg_luOqdYOwMWEl_7HQfetweHsMe1V18YJS2oQmUFdAfs-WyE9Ch2CtKfRnhigrxe99LW6BdWUHu4XMdjhO8Qhv9f6Epi54YmKn1bIsfGR0Y0Q1dUSH78zB-8UtnVYAWZAwmgU16vWeV5_ZPP3NPPRLRGqY8aWO02IO5SDrnI4", tecnologias: ["Java", "Spring Boot"], descricao: "Sistema de gestão de estoque para saúde pública com foco em rastreabilidade e eficiência.", icone: "inventory_2" },
-  { titulo: "TalentBridge", imagem: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNWKv-Qk3Zl1gqBntewPepTFszAAqfiWInAJqzhV9Z2Wp7XSe4ZkKT2X3-u32c3zGVjL_EAa9pweqGaY7h-ZrF7FA_KG6A_r22c8xi1C3nkqfO5zUQRhjhB7YQ8PCIr4R3cwtpjilrXzYgM3gxQANr4DTsmPdOLQAR9YUBAn4ELHGh5jKStvhq_UtdIZKpirgQSSAurpbRd2zWb8mJYvKFQkmdUSA_WJB9ceQsU3h_7gb0m6Vt-V2r8UmTMheSO00UlnndTIjZv8A", tecnologias: ["Next.js", "OpenAI API"], descricao: "Banco de talentos e currículos potencializado por IA para matching inteligente de vagas.", icone: "psychology" },
-  { titulo: "InventaAI", imagem: "https://lh3.googleusercontent.com/aida-public/AB6AXuB7W5-nwF9hFHA5GHmnFt4tkHP3aemJypHr9aXQos_iuGGMPbBvxz9HAAd7dfSnmKp1rzU1sY5JsDHRJYOnvGpQE5a6fs_fU7e1kuhPgrw8IbmgHcFyPquhrl-MkUaYNg8mgj9xPUg4oxZUAZXoHUmeU2RQPPNFVzupOFyv8u3NLBYSPAyYN5grX7uDFFZ3Q5WLrm1-9nfvedMcXAXNCbeRS5PZq8ijsfUfKTmnyPs5qcBUH6YR07Ie8WgDCEeQgRs7Ry6QISvTUws", tecnologias: ["React Native", "Python"], descricao: "Aplicativo móvel que utiliza IA para sugerir receitas baseadas nos ingredientes disponíveis.", icone: "restaurant" },
-  { titulo: "API Financeira", imagem: "https://lh3.googleusercontent.com/aida-public/AB6AXuAilzjJHivKYjuyfLEHkRCo2CgokP5kRqOwNAR9fPVvUaxxteMbJclPJhf4dUlMLaTfntGcgO-d-oqcqa5s4ylQ5g3dz7dFoTdDVXKOlS6wZ5D7V-CaSe84FfWhYqmf9OcC3Vh0xZbFtRSPKy8khaZMRuT-uReMjd3HTgYvkwxjJqK2VBtbMDrFhU_fDNpoKcjW7YmSlNVtzGM1165_FgaWDuroWnqvu5aEc7C-FumKSWUZ5j405iWzZ4-_m4_nWUXP1zvQ7kia3xA", tecnologias: ["Java", "Clean Architecture"], descricao: "Sistema bancário robusto desenvolvido com Clean Architecture e testes automatizados.", icone: "account_balance" },
-];
 
 export default function SecaoOutrosProjetos() {
   const ref = useAnimacaoScroll<HTMLElement>();
-  const [projetos, setProjetos] = useState<Projeto[]>(fallbackOutrosProjetos);
+  const [projetos, setProjetos] = useState<Projeto[]>([]);
   const [carregando, setCarregando] = useState(true);
-  
+  const [mostrarTodos, setMostrarTodos] = useState(false);
+
   useEffect(() => {
     async function fetchProjetos() {
       try {
@@ -42,22 +37,24 @@ export default function SecaoOutrosProjetos() {
             : (p.tecnologias || []),
           descricao: p.descricao,
           icone: "terminal", 
+          destaque: p.destaque
         }));
 
-        // A lógica de separação: os 2 primeiros vão para Destaque. Do 3º em diante, vêm para cá.
-        if (projetosFormatados.length > 2) {
-          setProjetos(projetosFormatados.slice(2));
-        } else {
-          setProjetos([]); // Esvazia se só houver 2 ou menos na API
-        }
+        // Filtra para exibir APENAS os projetos que NÃO são destaque (destaque === false)
+        const projetosNormais = projetosFormatados.filter((p) => p.destaque === false);
+        
+        setProjetos(projetosNormais);
       } catch (error) {
-        console.error("Falha ao carregar API, utilizando dados estáticos.", error);
+        console.error("Falha ao carregar API em Outros Projetos.", error);
       } finally {
         setCarregando(false);
       }
     }
     fetchProjetos();
   }, []);
+
+  // Variável derivada: se 'mostrarTodos' for true, mostra tudo. Senão, recorta os primeiros 4.
+  const projetosVisiveis = mostrarTodos ? projetos : projetos.slice(0, 4);
 
   return (
     <section ref={ref} id="projetos-adicionais" className="relative py-16 md:py-24 z-10">
@@ -69,30 +66,46 @@ export default function SecaoOutrosProjetos() {
             </h2>
             <div className="h-1 w-20" style={{ backgroundColor: "var(--color-primary)" }} />
           </div>
-          {/* Ícone de loading igual ao da secção de destaque */}
           {carregando && <span className="material-symbols-outlined animate-spin text-gray-500">sync</span>}
         </div>
         
-        {/* Mostra mensagem clara em vez de esconder tudo se estiver vazio */}
         {!carregando && projetos.length === 0 ? (
           <div className="p-6 border rounded-lg text-center" style={{ backgroundColor: "var(--color-surface-container)", borderColor: "rgba(255,255,255,0.05)" }}>
             <p style={{ color: "var(--color-on-surface-variant)", fontFamily: "Inter, sans-serif" }}>
-              Para que os projetos apareçam aqui, adicione 3 ou mais projetos na sua Base de Dados. Os 2 primeiros ficam em destaque.
+              Nenhum projeto adicional no momento.
             </p>
           </div>
         ) : (
+          // Restaurado para grid-cols-1 sm:grid-cols-2 original
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {projetos.map((projeto, index) => (
+            {projetosVisiveis.map((projeto, index) => (
               <ProjectCard 
                 key={projeto.id ? `outros-${projeto.id}` : `outros-fallback-${index}`} 
                 titulo={projeto.titulo} 
                 imagem={projeto.imagem} 
                 tecnologias={projeto.tecnologias} 
-                descricao={projeto.descricao} 
-                icone={projeto.icone} 
+                descricao={projeto.descricao} // Restaurado: essencial para o visual original
+                icone={projeto.icone}         // Restaurado: essencial para o visual original
                 variante="outros" 
               />
             ))}
+          </div>
+        )}
+
+        {/* Renderiza o botão "Ver mais" APENAS se houver mais de 4 projetos no total */}
+        {projetos.length > 4 && (
+          <div className="mt-12 flex justify-center">
+            <button
+              onClick={() => setMostrarTodos(!mostrarTodos)}
+              className="px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105"
+              style={{ 
+                backgroundColor: "transparent", 
+                color: "var(--color-on-surface)",
+                border: "1px solid var(--color-on-surface-variant)"
+              }}
+            >
+              {mostrarTodos ? "Ver menos" : "Ver mais projetos"}
+            </button>
           </div>
         )}
       </div>

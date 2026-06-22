@@ -42,22 +42,28 @@ export default function SecaoProjetosDestaque() {
         if (!res.ok) throw new Error("Erro ao buscar projetos");
         const data = await res.json();
         
-        // Formatação dos dados vindos da API para o formato esperado pelo Frontend
+        // Formatação dos dados vindos da API
         const projetosFormatados: Projeto[] = data.map((p: any) => ({
           id: p.id,
           titulo: p.titulo,
-          imagem: p.imagem_url || "https://via.placeholder.com/800x600?text=Projeto", // Mapeia imagem_url do FastAPI
-          // Transforma a string do FastAPI "React, Node" num array ["React", "Node"]
+          imagem: p.imagem_url || "https://via.placeholder.com/800x600?text=Projeto",
           tecnologias: typeof p.tecnologias === 'string' 
             ? p.tecnologias.split(',').map((t: string) => t.trim()).filter(Boolean)
             : (p.tecnologias || []),
           descricao: p.descricao,
-          icone: "code"
+          icone: "code",
+          destaque: p.destaque // Captura a nova propriedade do backend
         }));
 
-        if (projetosFormatados.length > 0) {
-          // Pega nos 2 primeiros projetos para a secção de destaque
-          setProjetos(projetosFormatados.slice(0, 2));
+        // Filtra apenas os projetos com destaque e limita a um máximo de 2
+        const projetosDestaque = projetosFormatados
+          .filter((p) => p.destaque === true)
+          .slice(0, 2);
+
+        if (projetosDestaque.length > 0) {
+          setProjetos(projetosDestaque);
+        } else if (projetosFormatados.length > 0 && projetosDestaque.length === 0) {
+          setProjetos([]); // Define como vazio se houver projetos na API, mas nenhum for destaque
         }
       } catch (error) {
         console.error("Falha ao carregar API, utilizando dados estáticos.", error);
@@ -81,15 +87,19 @@ export default function SecaoProjetosDestaque() {
           {carregando && <span className="material-symbols-outlined animate-spin text-gray-500">sync</span>}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projetos.map((projeto, index) => (
-            <ProjectCard 
-              key={projeto.id ? `destaque-${projeto.id}` : `destaque-fallback-${index}`} // Resolve o erro de duplicidade
-              titulo={projeto.titulo} 
-              imagem={projeto.imagem} 
-              tecnologias={projeto.tecnologias} 
-              variante="destaque" 
-            />
-          ))}
+          {projetos.length > 0 ? (
+            projetos.map((projeto, index) => (
+              <ProjectCard 
+                key={projeto.id ? `destaque-${projeto.id}` : `destaque-fallback-${index}`}
+                titulo={projeto.titulo} 
+                imagem={projeto.imagem} 
+                tecnologias={projeto.tecnologias} 
+                variante="destaque" 
+              />
+            ))
+          ) : (
+            <p className="text-gray-400">Nenhum projeto em destaque no momento.</p>
+          )}
         </div>
       </div>
     </section>

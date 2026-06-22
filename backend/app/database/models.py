@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, Boolean
 from app.database.base import Base
 
 class Projeto(Base):
@@ -11,3 +11,4 @@ class Projeto(Base):
     imagem_url = Column(String, nullable=True)
     link_github = Column(String, nullable=True)
     link_deploy = Column(String, nullable=True)
+    destaque = Column(Boolean, default=False) # Nova coluna adicionada
