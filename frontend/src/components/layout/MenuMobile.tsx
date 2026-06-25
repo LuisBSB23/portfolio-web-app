@@ -11,7 +11,7 @@ export default function MenuMobile({ aberto, aoFechar }: MenuMobileProps) {
       id="mobile-menu"
       className="md:hidden absolute top-16 left-0 w-full border-b shadow-2xl transition-all duration-300 backdrop-blur-xl"
       style={{
-        backgroundColor: 'rgba(18, 18, 18, 0.7)', // Translúcido
+        backgroundColor: 'rgba(18, 18, 18, 0.7)',
         borderColor: 'rgba(255,255,255,0.1)',
         opacity: aberto ? 1 : 0,
         visibility: aberto ? 'visible' : 'hidden',
@@ -27,6 +27,15 @@ export default function MenuMobile({ aberto, aoFechar }: MenuMobileProps) {
           style={{ color: 'var(--color-primary)', fontFamily: 'JetBrains Mono, monospace' }}
         >
           Projetos
+        </a>
+         {/* Link Habilidades Adicionado */}
+        <a
+          href="#habilidades"
+          onClick={aoFechar}
+          className="text-[16px] hover:bg-white/10 p-4 rounded-lg transition-colors flex items-center min-h-[48px] text-white"
+          style={{ fontFamily: 'JetBrains Mono, monospace' }}
+        >
+          Habilidades
         </a>
         <a
           href="#sobre-mim"

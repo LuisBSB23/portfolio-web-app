@@ -7,10 +7,12 @@ const areas = [
   { icone: "layers", titulo: "Full Stack Development", descricao: "Domínio de ecossistemas modernos utilizando Python, Node.js e Laravel para o desenvolvimento de aplicações web escaláveis." },
   { icone: "neurology", titulo: "IA & Automação", descricao: "Integração de LLMs e modelos preditivos para criar aplicações autônomas e inteligentes." },
   { icone: "architecture", titulo: "Arquitetura de ADS", descricao: "Análise e Desenvolvimento de Sistemas com foco em performance, segurança e padrões de código limpo." },
+  { icone: "code", titulo: "Desenvolvimento Frontend", descricao: "Criação de interfaces de utilizador interativas e responsivas utilizando React e Next.js." } // Adicionei mais uma para demonstrar o carrossel.
 ];
 
 export default function SecaoAreasEspecialidade() {
   const ref = useAnimacaoScroll<HTMLElement>();
+  const isCarousel = areas.length >= 4;
 
   return (
     <section ref={ref} id="areas-especialidade" className="relative py-16 md:py-24 z-10">
@@ -21,9 +23,13 @@ export default function SecaoAreasEspecialidade() {
           </h2>
           <div className="h-1 w-20" style={{ backgroundColor: "var(--color-primary)" }} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {/* Implementação do Carrossel Condicional */}
+        <div className={isCarousel ? "flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 scrollbar-hide" : "grid grid-cols-1 md:grid-cols-3 gap-6"}>
           {areas.map((area) => (
-            <SpecialtyCard key={area.titulo} icone={area.icone} titulo={area.titulo} descricao={area.descricao} />
+             <div key={area.titulo} className={isCarousel ? "snap-center min-w-[300px] flex-shrink-0" : ""}>
+                 <SpecialtyCard icone={area.icone} titulo={area.titulo} descricao={area.descricao} />
+             </div>
           ))}
         </div>
       </div>

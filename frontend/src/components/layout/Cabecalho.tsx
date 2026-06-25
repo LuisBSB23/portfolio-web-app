@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import MenuMobile from "./MenuMobile";
-import BarraProgressoScroll from "../BarraProgressoScroll"; // 1. Importar barra
+import BarraProgressoScroll from "../BarraProgressoScroll";
 
 export default function Cabecalho() {
   const [menuAberto, setMenuAberto] = useState(false);
@@ -18,12 +18,12 @@ export default function Cabecalho() {
 
   return (
     <>
-      <BarraProgressoScroll /> {/* Adicionado no topo */}
+      <BarraProgressoScroll />
       <nav
         className="fixed top-0 w-full z-50 backdrop-blur-xl border-b h-16 transition-all duration-300"
         style={{
-          backgroundColor: 'rgba(18, 18, 18, 0.4)', // Mais transparente para notar o blur
-          borderColor: 'rgba(255, 255, 255, 0.1)', // Borda ligeiramente mais visível e elegante
+          backgroundColor: 'rgba(18, 18, 18, 0.4)',
+          borderColor: 'rgba(255, 255, 255, 0.1)',
         }}
       >
         <div
@@ -48,6 +48,14 @@ export default function Cabecalho() {
                 style={{ color: 'var(--color-primary)', fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.05em' }}
               >
                 Projetos
+              </a>
+               {/* Link Habilidades Adicionado */}
+               <a
+                href="#habilidades"
+                className="text-[14px] transition-colors duration-300 flex items-center min-h-[48px] px-2 hover:opacity-80 hover:text-white"
+                style={{ color: 'var(--color-on-surface-variant)', fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.05em' }}
+              >
+                Habilidades
               </a>
               <a
                 href="#sobre-mim"
