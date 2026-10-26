@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 
-interface ProjectCardProps {
+// 1. Criamos a interface que define a estrutura do objeto 'projeto'
+export interface Projeto {
   titulo: string;
   imagem: string;
   tecnologias: string[];
@@ -12,15 +13,23 @@ interface ProjectCardProps {
   icone?: string;
 }
 
-export default function ProjectCard({
-  titulo,
-  imagem,
-  tecnologias,
-  descricao,
-  linkRepositorio = "#",
-  variante = "destaque",
-  icone,
-}: ProjectCardProps) {
+// 2. Atualizamos a interface do componente para receber a prop 'projeto'
+interface ProjectCardProps {
+  projeto: Projeto;
+}
+
+export default function ProjectCard({ projeto }: ProjectCardProps) {
+  // 3. Desestruturamos os valores do objeto projeto, mantendo os valores por defeito
+  const {
+    titulo,
+    imagem,
+    tecnologias,
+    descricao,
+    linkRepositorio = "#",
+    variante = "destaque",
+    icone,
+  } = projeto;
+
   const cardRef = useRef<HTMLDivElement>(null);
   const [tiltStyle, setTiltStyle] = useState({
     transform: "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
@@ -28,7 +37,7 @@ export default function ProjectCard({
   });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // 1. BLOQUEIO PARA MOBILE: Não executa o efeito em ecrãs pequenos
+    // BLOQUEIO PARA MOBILE: Não executa o efeito em ecrãs pequenos
     if (typeof window !== "undefined" && window.innerWidth < 768) return;
     
     if (!cardRef.current) return;
